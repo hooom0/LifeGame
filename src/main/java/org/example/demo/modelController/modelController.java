@@ -1,8 +1,10 @@
 package org.example.demo.modelController;
 
+import java.util.Arrays;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.random.RandomGenerator;
+import java.util.stream.IntStream;
 
 public class modelController {
 
@@ -24,7 +26,7 @@ public class modelController {
         for(int i=0;i<100;i++){
             for(int j=0;j<50;j++){
                 int randomInt = ThreadLocalRandom.current().nextInt(100);
-                gridData[i][j] = randomInt/70;
+                gridData[i][j] = randomInt/85;
             }
         }
     }
@@ -61,5 +63,9 @@ public class modelController {
             else if(add>=4)return false;
             else return true;
         }
+    }
+
+    public void allClear() {
+        IntStream.range(0,gridData.length).forEach(i->{Arrays.fill(gridData[i],0);});
     }
 }

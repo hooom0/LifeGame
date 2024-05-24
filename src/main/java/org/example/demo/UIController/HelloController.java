@@ -18,8 +18,13 @@ import org.slf4j.LoggerFactory;
 import java.util.Objects;
 
 public class HelloController extends Thread {
-
     Logger logger = LoggerFactory.getLogger(HelloController.class);
+    @FXML
+    public Button ButtonClear;
+
+
+    @FXML
+    public Button ButtonRunOnce;
 
     @FXML
     private GridPane placeholderGridPane;
@@ -33,7 +38,7 @@ public class HelloController extends Thread {
     private modelController modelcontroller = new modelController();
 
     Timeline timeline = new Timeline(
-            new KeyFrame(Duration.seconds(1), event -> {
+            new KeyFrame(Duration.seconds(0.5), event -> {
                 // 更新操作
                 modelcontroller.updateGridData();
                 updateGridPane();
@@ -60,7 +65,9 @@ public class HelloController extends Thread {
             gridPane.getRowConstraints().add(rowConstraints);
 
         }
-        //modelcontroller.Reset();
+
+
+        modelcontroller.Reset();
         int[][] gridData = modelcontroller.getGridData();
         for(int i=0;i<100;i++)
             for(int j=0;j<50;j++){
@@ -118,13 +125,37 @@ public class HelloController extends Thread {
     public void StartClick(ActionEvent mouseDragEvent)  {
         ButtonStart.setDisable(true);
         ButtonStop.setDisable(false);
+        ButtonRunOnce.setDisable(true);
+        ButtonClear.setDisable(true);
         timeline.play();
     }
 
     public void StopClick(ActionEvent mouseDragEvent)  {
         ButtonStop.setDisable(true);
         ButtonStart.setDisable(false);
+        ButtonRunOnce.setDisable(false);
+        ButtonClear.setDisable(false);
         timeline.stop();
     }
+
+    public void runOnceClick(ActionEvent mouseDragEvent) {
+        Timeline timeline1 = new Timeline(
+                new KeyFrame(Duration.seconds(0.001), event -> {
+                    modelcontroller.updateGridData();
+                    updateGridPane();
+                    logger.info("更新一次");
+                })
+        );
+        timeline1.play();
+    }
+
+    public void ClearClick(ActionEvent actionEvent) {
+
+        logger.info("清零");
+
+        modelcontroller.allClear();
+        updateGridPane();
+    }
+
 
 }

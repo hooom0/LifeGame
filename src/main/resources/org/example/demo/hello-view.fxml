@@ -19,16 +19,16 @@
                <font>
                   <Font size="24.0" />
                </font></Button>
-            <Button fx:id="ButtonStop" mnemonicParsing="false" text="停止" onAction="#StopClick">
+            <Button fx:id="ButtonStop" mnemonicParsing="false" onAction="#StopClick" text="停止">
                <font>
                   <Font size="24.0" />
                </font>
             </Button>
-            <Button mnemonicParsing="false" text="Button">
+            <Button fx:id="ButtonClear" mnemonicParsing="false" text="清零" onAction="#ClearClick">
                <font>
                   <Font size="23.0" />
                </font></Button>
-            <Button mnemonicParsing="false" text="下一步">
+            <Button fx:id="ButtonRunOnce" mnemonicParsing="false" onAction="#runOnceClick" text="下一步">
                <font>
                   <Font size="24.0" />
                </font>
