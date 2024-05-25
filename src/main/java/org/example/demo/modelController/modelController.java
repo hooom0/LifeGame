@@ -8,10 +8,26 @@ import java.util.stream.IntStream;
 
 public class modelController {
 
-    private int[][] gridData = new int[100][50];
+    private int hang = 50;
+    private int lie = 100;
+    private int[][] gridData = new int[lie][hang];
     private final int[][] dir = {{0,1},{1,0},{0,-1},{-1,0},{1,1},{-1,-1},{-1,1},{1,-1}};
     public modelController() {
 
+    }
+
+    public void setHang(int hang) {
+        this.hang = hang;
+    }
+    public void setLie(int lie) {
+        this.lie = lie;
+    }
+    public int getHang(){
+        return hang;
+    }
+
+    public int getLie(){
+        return lie;
     }
 
     public int[][] getGridData() {
@@ -23,8 +39,8 @@ public class modelController {
     }
 
     public void Reset(){
-        for(int i=0;i<100;i++){
-            for(int j=0;j<50;j++){
+        for(int i=0;i<lie;i++){
+            for(int j=0;j<hang;j++){
                 int randomInt = ThreadLocalRandom.current().nextInt(100);
                 gridData[i][j] = randomInt/85;
             }
@@ -33,9 +49,9 @@ public class modelController {
 
 
     public void updateGridData() {
-        int [][] gridDataNew = new int[100][50];
-        for(int i=0;i<100;i++){
-            for(int j=0;j<50;j++){
+        int [][] gridDataNew = new int[lie][hang];
+        for(int i=0;i<lie;i++){
+            for(int j=0;j<hang;j++){
                 if(checkLifeGame(i,j))
                     gridDataNew[i][j] = 1;
                 else
@@ -49,9 +65,9 @@ public class modelController {
 
         int add = 0;
         for(int i=0;i<8;i++){
-            int nx = x + dir[i][0];
-            int ny = y + dir[i][1];
-            if(nx<0 || nx>=100 || ny<0 || ny>=50)continue;
+            int nx = (x + dir[i][0]+lie)%lie;
+            int ny = (y + dir[i][1]+hang)%hang;
+//            if(nx<0 || nx>=lie || ny<0 || ny>=hang)continue;
             add+= gridData[nx][ny];
         }
         if(gridData[x][y]==0){

@@ -8,6 +8,7 @@ import javafx.fxml.FXML;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.util.Duration;
 import org.example.demo.modelController.modelController;
@@ -22,6 +23,8 @@ public class HelloController extends Thread {
     @FXML
     public Button ButtonClear;
 
+    @FXML
+    public VBox VBox;
 
     @FXML
     public Button ButtonRunOnce;
@@ -51,26 +54,27 @@ public class HelloController extends Thread {
     @FXML
     public void initialize() {
         timeline.setCycleCount(Timeline.INDEFINITE);
+        modelcontroller.Reset();
+        placeholderGridPane.getChildren().add(0,initGridPane());
+    }
+
+    private GridPane initGridPane(){
         GridPane gridPane = new GridPane();
-        for(int i=0;i<100;i++)
+        for(int i=0;i< modelcontroller.getLie();i++)//lie
         {
             ColumnConstraints colConstraints = new ColumnConstraints();
-            colConstraints.setPercentWidth(1);  // 每列占总宽度的 33%
+            colConstraints.setPercentWidth((double) 100 /modelcontroller.getLie());  // 每列占总宽度的 33%
             gridPane.getColumnConstraints().add(colConstraints);
         }
-        for(int j=0;j<50;j++)
+        for(int j=0;j< modelcontroller.getHang();j++)//hang
         {
             RowConstraints rowConstraints = new RowConstraints();
-            rowConstraints.setPercentHeight(2);  // 每行占总高度的 33%
+            rowConstraints.setPercentHeight((double) 100 /modelcontroller.getHang());  // 每行占总高度的 33%
             gridPane.getRowConstraints().add(rowConstraints);
-
         }
-
-
-        modelcontroller.Reset();
         int[][] gridData = modelcontroller.getGridData();
-        for(int i=0;i<100;i++)
-            for(int j=0;j<50;j++){
+        for(int i=0;i<modelcontroller.getLie();i++)
+            for(int j=0;j< modelcontroller.getHang();j++){
                 Pane pane = new Pane();
                 pane.setBackground(Background.EMPTY);
                 if(gridData[i][j]==0)
@@ -80,31 +84,38 @@ public class HelloController extends Thread {
 
                 pane.setOnMouseClicked(mouseEvent -> {
 
-                    Integer xIndex = (int)((mouseEvent.getSceneX())/16);
-                    Integer yIndex = (int)((mouseEvent.getSceneY())/18);
-
-                    modelcontroller.setGridData(xIndex,yIndex);
-
-                    logger.info("点击X像素位置:"+mouseEvent.getSceneX());
-                    logger.info("点击Y像素位置:"+mouseEvent.getSceneY());
-                    logger.info("点击位置："+xIndex+","+yIndex);
-
+                    FindIndexAndChange(mouseEvent);
                     if(Objects.equals(pane.getStyle(), "-fx-background-color: #333333;"))
                         pane.setStyle("-fx-background-color:255,255,102 ;");
                     else
                         pane.setStyle("-fx-background-color: #333333;");
                 });
+
+                pane.setOnMouseMoved(mouseEvent -> {
+                    if(mouseEvent.isShiftDown()){
+                        FindIndexAndChange(mouseEvent);
+                        pane.setStyle("-fx-background-color:255,255,102 ;");
+                    }
+                });
                 gridPane.add(pane,i,j);
             }
-
         gridPane.setGridLinesVisible(true);
-        placeholderGridPane.getChildren().add(gridPane);
+        return gridPane;
     }
 
+    private void FindIndexAndChange(MouseEvent mouseEvent) {
+        Integer xIndex = (int)((mouseEvent.getSceneX())/(placeholderGridPane.getWidth()/modelcontroller.getLie()));
+        Integer yIndex = (int)((mouseEvent.getSceneY())/(placeholderGridPane.getHeight()/modelcontroller.getHang()));
+
+        modelcontroller.setGridData(xIndex,yIndex);
+
+        logger.info("点击X像素位置:"+mouseEvent.getSceneX()+":"+placeholderGridPane.getWidth());
+        logger.info("点击Y像素位置:"+mouseEvent.getSceneY()+":"+placeholderGridPane.getHeight());
+        logger.info("点击位置："+xIndex+","+yIndex);
+    }
 
     public void updateGridPane(){
         int[][] gridData = modelcontroller.getGridData();
-
         GridPane childrens = (GridPane) placeholderGridPane.getChildren().get(0);
         ObservableList<Node> children = childrens.getChildren();
         for(Node node : children){
@@ -118,6 +129,8 @@ public class HelloController extends Thread {
                 pane.setStyle("-fx-background-color:255,255,102 ");
         }
     }
+
+
 
 
 
@@ -152,7 +165,6 @@ public class HelloController extends Thread {
     public void ClearClick(ActionEvent actionEvent) {
 
         logger.info("清零");
-
         modelcontroller.allClear();
         updateGridPane();
     }
