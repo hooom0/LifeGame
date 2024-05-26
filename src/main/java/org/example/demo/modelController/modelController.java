@@ -1,9 +1,7 @@
 package org.example.demo.modelController;
 
 import java.util.Arrays;
-import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
-import java.util.random.RandomGenerator;
 import java.util.stream.IntStream;
 
 public class modelController {
@@ -34,11 +32,15 @@ public class modelController {
         return gridData;
     }
 
-    public void setGridData(Integer i,Integer j) {
+    public void setGridData(Integer i, Integer j, int flag) {
+        if(flag == 1){
+            gridData[i][j] = 0 ;
+        }
         gridData[i][j] = gridData[i][j] ^ 1 ;
     }
 
     public void Reset(){
+        gridData = new int[lie][hang];
         for(int i=0;i<lie;i++){
             for(int j=0;j<hang;j++){
                 int randomInt = ThreadLocalRandom.current().nextInt(100);
