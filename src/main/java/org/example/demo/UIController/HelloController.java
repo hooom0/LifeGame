@@ -141,6 +141,7 @@ public class HelloController extends Thread {
     public void StartClick(ActionEvent mouseDragEvent)  {
         ButtonStart.setDisable(true);
         ButtonStop.setDisable(false);
+        ButtonRefresh.setDisable(false);
         ButtonRunOnce.setDisable(true);
         ButtonClear.setDisable(true);
         timeline.play();
@@ -149,6 +150,7 @@ public class HelloController extends Thread {
     public void StopClick(ActionEvent mouseDragEvent)  {
         ButtonStop.setDisable(true);
         ButtonStart.setDisable(false);
+        ButtonRefresh.setDisable(true);
         ButtonRunOnce.setDisable(false);
         ButtonClear.setDisable(false);
         timeline.stop();
