@@ -24,6 +24,11 @@
                   <Font size="24.0" />
                </font>
             </Button>
+            <Button fx:id="ButtonRefresh" mnemonicParsing="false" onAction="#RefreshClick" text="刷新">
+                <font>
+                  <Font size="24.0" />
+                </font>
+            </Button>
             <Button fx:id="ButtonClear" mnemonicParsing="false" text="清零" onAction="#ClearClick">
                <font>
                   <Font size="23.0" />
