@@ -37,6 +37,9 @@ public class HelloController extends Thread {
 
     @FXML
     private Button ButtonStop;
+    
+    @FXML
+    private Button ButtonRefresh;
 
     private modelController modelcontroller = new modelController();
 
@@ -161,7 +164,11 @@ public class HelloController extends Thread {
         );
         timeline1.play();
     }
-
+    public void RefreshClick(ActionEvent actionEvent) {
+        modelcontroller.Reset();
+        updateGridPane();
+        logger.info("刷新初始界面");
+    }
     public void ClearClick(ActionEvent actionEvent) {
 
         logger.info("清零");
