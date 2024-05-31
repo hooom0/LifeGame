@@ -24,7 +24,7 @@ import java.util.Objects;
 
 import static java.lang.Integer.parseInt;
 
-public class HelloController extends Thread {
+public class HelloController{
     @FXML
     public Circle ifShiftOrNot;
     public TextField widthText;
@@ -41,16 +41,16 @@ public class HelloController extends Thread {
     public Button ButtonRunOnce;
 
     @FXML
-    private GridPane placeholderGridPane;
+    GridPane placeholderGridPane;
 
     @FXML
-    private Button ButtonStart;
+    public Button ButtonStart;
 
     @FXML
-    private Button ButtonStop;
+    public Button ButtonStop;
     
     @FXML
-    private Button ButtonRefresh;
+    public Button ButtonRefresh;
 
     private modelController modelcontroller = new modelController();
 
