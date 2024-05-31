@@ -49,7 +49,6 @@ public class modelController {
         }
     }
 
-
     public void updateGridData() {
         int [][] gridDataNew = new int[lie][hang];
         for(int i=0;i<lie;i++){
@@ -65,13 +64,7 @@ public class modelController {
 
     private boolean checkLifeGame(int x, int y) {
 
-        int add = 0;
-        for(int i=0;i<8;i++){
-            int nx = (x + dir[i][0]+lie)%lie;
-            int ny = (y + dir[i][1]+hang)%hang;
-//            if(nx<0 || nx>=lie || ny<0 || ny>=hang)continue;
-            add+= gridData[nx][ny];
-        }
+        int add = getAdd(x, y);
         if(gridData[x][y]==0){
             if(add==3)
                 return true;
@@ -81,6 +74,16 @@ public class modelController {
             else if(add>=4)return false;
             else return true;
         }
+    }
+
+    public int getAdd(int x, int y) {
+        int add = 0;
+        for(int i=0;i<8;i++){
+            int nx = (x + dir[i][0]+lie)%lie;
+            int ny = (y + dir[i][1]+hang)%hang;
+            add+= gridData[nx][ny];
+        }
+        return add;
     }
 
     public void allClear() {

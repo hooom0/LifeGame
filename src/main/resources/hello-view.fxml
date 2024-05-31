@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.*?>
+<?import javafx.scene.text.*?>
+
+<VBox fx:id="VBox" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onKeyPressed="#ShiftPush" onKeyReleased="#ShiftRelease" prefHeight="950.0" prefWidth="1600.0" xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.demo.UIController.HelloController">
+    <children>
+        <GridPane fx:id="placeholderGridPane" prefHeight="900.0" prefWidth="1600.0">
+         <rowConstraints>
+            <RowConstraints minHeight="0.0" prefHeight="900" />
+         </rowConstraints>
+         <columnConstraints>
+            <ColumnConstraints minWidth="0.0" prefWidth="1600" />
+         </columnConstraints></GridPane>
+      <HBox alignment="CENTER" layoutX="500.0" prefHeight="50.0" prefWidth="200.0" spacing="30.0">
+         <children>
+            <Button fx:id="ButtonStart" mnemonicParsing="false" onAction="#StartClick" text="开始">
+               <font>
+                  <Font size="24.0" />
+               </font></Button>
+            <Button fx:id="ButtonStop" mnemonicParsing="false" onAction="#StopClick" text="停止">
+               <font>
+                  <Font size="24.0" />
+               </font>
+            </Button>
+            <Button fx:id="ButtonRefresh" mnemonicParsing="false" onAction="#RefreshClick" text="刷新">
+                <font>
+                  <Font size="24.0" />
+                </font>
+            </Button>
+            <Button fx:id="ButtonClear" mnemonicParsing="false" onAction="#ClearClick" text="清零">
+               <font>
+                  <Font size="23.0" />
+               </font></Button>
+            <Button fx:id="ButtonRunOnce" mnemonicParsing="false" onAction="#runOnceClick" text="下一步">
+               <font>
+                  <Font size="24.0" />
+               </font>
+            </Button>
+            <SplitPane dividerPositions="0.5" nodeOrientation="LEFT_TO_RIGHT" prefHeight="200.0" prefWidth="200.0">
+               <items>
+                  <Circle fx:id="ifShiftOrNot" fill="WHITE" radius="24.0" stroke="BLACK" strokeMiterLimit="5.0" strokeType="INSIDE" />
+                  <Label text="开启画线">
+                     <font>
+                        <Font size="34.0" />
+                     </font>
+                  </Label>
+               </items>
+            </SplitPane>
+            <SplitPane dividerPositions="0.5" prefHeight="200.0" prefWidth="160.0">
+               <items>
+                  <Label text="宽度">
+                     <font>
+                        <Font size="34.0" />
+                     </font>
+                  </Label>
+                  <TextField fx:id="widthText" />
+               </items>
+            </SplitPane>
+            <SplitPane dividerPositions="0.5" prefHeight="200.0" prefWidth="160.0">
+               <items>
+                  <Label text="长度">
+                     <font>
+                        <Font size="36.0" />
+                     </font>
+                  </Label>
+                  <TextField fx:id="highText" />
+               </items>
+            </SplitPane>
+            <Button fx:id="ButtonChange" mnemonicParsing="false" text="修改大小" onMouseClicked="#ClickChange" />
+         </children>
+      </HBox>
+
+    </children>
+</VBox>
+
