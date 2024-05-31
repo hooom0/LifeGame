@@ -8,8 +8,12 @@ import javafx.fxml.FXML;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
+import javafx.scene.paint.Paint;
+import javafx.scene.shape.Circle;
 import javafx.util.Duration;
 import org.example.demo.modelController.modelController;
 import org.slf4j.Logger;
@@ -18,7 +22,14 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Objects;
 
-public class HelloController extends Thread {
+import static java.lang.Integer.parseInt;
+
+public class HelloController{
+    @FXML
+    public Circle ifShiftOrNot;
+    public TextField widthText;
+    public TextField highText;
+    public Button ButtonChange;
     Logger logger = LoggerFactory.getLogger(HelloController.class);
     @FXML
     public Button ButtonClear;
@@ -30,16 +41,16 @@ public class HelloController extends Thread {
     public Button ButtonRunOnce;
 
     @FXML
-    private GridPane placeholderGridPane;
+    GridPane placeholderGridPane;
 
     @FXML
-    private Button ButtonStart;
+    public Button ButtonStart;
 
     @FXML
-    private Button ButtonStop;
-    
+    public Button ButtonStop;
+
     @FXML
-    private Button ButtonRefresh;
+    public Button ButtonRefresh;
 
     private modelController modelcontroller = new modelController();
 
@@ -57,11 +68,14 @@ public class HelloController extends Thread {
     @FXML
     public void initialize() {
         timeline.setCycleCount(Timeline.INDEFINITE);
-        modelcontroller.Reset();
         placeholderGridPane.getChildren().add(0,initGridPane());
+
+        widthText.setText(String.valueOf(modelcontroller.getLie()));
+        highText.setText(String.valueOf(modelcontroller.getHang()));
     }
 
     private GridPane initGridPane(){
+        modelcontroller.Reset();
         GridPane gridPane = new GridPane();
         for(int i=0;i< modelcontroller.getLie();i++)//lie
         {
@@ -83,21 +97,21 @@ public class HelloController extends Thread {
                 if(gridData[i][j]==0)
                     pane.setStyle("-fx-background-color: #333333;");
                 else
-                    pane.setStyle("-fx-background-color:255,255,102 ");
+                    pane.setStyle("-fx-background-color:#CCFFFF ");
 
                 pane.setOnMouseClicked(mouseEvent -> {
 
-                    FindIndexAndChange(mouseEvent);
+                    FindIndexAndChange(mouseEvent,0);
                     if(Objects.equals(pane.getStyle(), "-fx-background-color: #333333;"))
-                        pane.setStyle("-fx-background-color:255,255,102 ;");
+                        pane.setStyle("-fx-background-color:#CCFFFF ;");
                     else
                         pane.setStyle("-fx-background-color: #333333;");
                 });
 
                 pane.setOnMouseMoved(mouseEvent -> {
                     if(mouseEvent.isShiftDown()){
-                        FindIndexAndChange(mouseEvent);
-                        pane.setStyle("-fx-background-color:255,255,102 ;");
+                        FindIndexAndChange(mouseEvent,1);
+                        pane.setStyle("-fx-background-color:#CCFFFF ;");
                     }
                 });
                 gridPane.add(pane,i,j);
@@ -106,15 +120,19 @@ public class HelloController extends Thread {
         return gridPane;
     }
 
-    private void FindIndexAndChange(MouseEvent mouseEvent) {
+    private void FindIndexAndChange(MouseEvent mouseEvent,int flag) {
         Integer xIndex = (int)((mouseEvent.getSceneX())/(placeholderGridPane.getWidth()/modelcontroller.getLie()));
         Integer yIndex = (int)((mouseEvent.getSceneY())/(placeholderGridPane.getHeight()/modelcontroller.getHang()));
 
-        modelcontroller.setGridData(xIndex,yIndex);
+        modelcontroller.setGridData(xIndex,yIndex,flag);
+        if(flag == 0){
+            logger.info("点击X像素位置:"+mouseEvent.getSceneX()+":"+placeholderGridPane.getWidth());
+            logger.info("点击Y像素位置:"+mouseEvent.getSceneY()+":"+placeholderGridPane.getHeight());
+            logger.info("点击位置："+xIndex+","+yIndex);
+        }else{
+            logger.info("画线位置："+xIndex+","+yIndex);
+        }
 
-        logger.info("点击X像素位置:"+mouseEvent.getSceneX()+":"+placeholderGridPane.getWidth());
-        logger.info("点击Y像素位置:"+mouseEvent.getSceneY()+":"+placeholderGridPane.getHeight());
-        logger.info("点击位置："+xIndex+","+yIndex);
     }
 
     public void updateGridPane(){
@@ -127,9 +145,9 @@ public class HelloController extends Thread {
             int j = GridPane.getRowIndex(node);
             Pane pane = (Pane)node;
             if(gridData[i][j]==0)
-                pane.setStyle("-fx-background-color: #333333;");
+                pane.setStyle("-fx-background-color: #333333");
             else
-                pane.setStyle("-fx-background-color:255,255,102 ");
+                pane.setStyle("-fx-background-color: #CCFFFF");
         }
     }
 
@@ -141,7 +159,7 @@ public class HelloController extends Thread {
     public void StartClick(ActionEvent mouseDragEvent)  {
         ButtonStart.setDisable(true);
         ButtonStop.setDisable(false);
-        ButtonRefresh.setDisable(false);
+        ButtonRefresh.setDisable(true);
         ButtonRunOnce.setDisable(true);
         ButtonClear.setDisable(true);
         timeline.play();
@@ -150,7 +168,7 @@ public class HelloController extends Thread {
     public void StopClick(ActionEvent mouseDragEvent)  {
         ButtonStop.setDisable(true);
         ButtonStart.setDisable(false);
-        ButtonRefresh.setDisable(true);
+        ButtonRefresh.setDisable(false);
         ButtonRunOnce.setDisable(false);
         ButtonClear.setDisable(false);
         timeline.stop();
@@ -178,5 +196,26 @@ public class HelloController extends Thread {
         updateGridPane();
     }
 
+    public void ShiftPush(KeyEvent keyEvent){
+        if(keyEvent.isShiftDown()){
+            ifShiftOrNot.setFill(Paint.valueOf("BLACK"));
+        }
+    }
+
+    public void ShiftRelease(KeyEvent keyEvent){
+        if(!keyEvent.isShiftDown()){
+            ifShiftOrNot.setFill(Paint.valueOf("WHITE"));
+        }
+    }
+
+    public void ClickChange(){
+        logger.info(String.valueOf(parseInt(highText.getText())));
+        modelcontroller.setHang(parseInt(highText.getText()));
+        modelcontroller.setLie(parseInt(widthText.getText()));
+
+        placeholderGridPane.getChildren().clear();
+        placeholderGridPane.getChildren().add(0,initGridPane());
+        updateGridPane();
+    }
 
 }

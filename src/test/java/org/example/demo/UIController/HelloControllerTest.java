@@ -2,11 +2,14 @@ package org.example.demo.UIController;
 
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Group;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Pane;
+import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
 import org.junit.jupiter.api.BeforeAll;
@@ -22,6 +25,7 @@ import java.net.URL;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+
 
 public class HelloControllerTest extends ApplicationTest {
 
@@ -40,9 +44,8 @@ public class HelloControllerTest extends ApplicationTest {
         stage.setScene(scene);
         controller = loader.getController();
         robot = new FxRobot();
-
         logger.info("url:{}",loader);
-
+        stage.show();
     }
 
     @BeforeEach
@@ -63,11 +66,7 @@ public class HelloControllerTest extends ApplicationTest {
 
 
         robot.clickOn(buttonStart);
-
-
-        // Click Stop
-        robot.clickOn(buttonStop);
-        assertTrue(true);
+        assertTrue(buttonStart.isDisabled());
     }
 
     @Test
@@ -90,7 +89,9 @@ public class HelloControllerTest extends ApplicationTest {
 
         // Validate grid is cleared
         gridPane.getChildren().forEach(node -> {
-            assertEquals("-fx-background-color: #333333;", node.getStyle());
+            if(node instanceof Pane){
+                assertEquals("-fx-background-color: #333333", node.getStyle());
+            }
         });
     }
 
@@ -100,10 +101,10 @@ public class HelloControllerTest extends ApplicationTest {
 
         // Simulate shift key press
         robot.press(KeyCode.SHIFT);
-        assertEquals("BLACK", ifShiftOrNot.getFill().toString());
+        assertEquals(Paint.valueOf("BLACK").toString(), ifShiftOrNot.getFill().toString());
 
         // Simulate shift key release
         robot.release(KeyCode.SHIFT);
-        assertEquals("WHITE", ifShiftOrNot.getFill().toString());
+        assertEquals(Paint.valueOf("WHITE").toString(), ifShiftOrNot.getFill().toString());
     }
 }
