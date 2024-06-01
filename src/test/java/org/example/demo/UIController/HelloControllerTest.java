@@ -64,15 +64,15 @@ public class HelloControllerTest extends ApplicationTest {
         Button buttonStart = controller.ButtonStart;
         Button buttonStop = controller.ButtonStop;
 
-
         robot.clickOn(buttonStart);
         assertTrue(buttonStart.isDisabled());
+        robot.clickOn(buttonStop);
+        assertTrue(buttonStop.isDisabled());
     }
 
     @Test
     public void testButtonRunOnce() {
         Button buttonRunOnce = controller.ButtonRunOnce;
-
         // Click Run Once
         robot.clickOn(buttonRunOnce);
         // Validate some state changes
@@ -80,7 +80,6 @@ public class HelloControllerTest extends ApplicationTest {
 
     @Test
     public void testButtonClear() {
-
         Button buttonClear = controller.ButtonClear;
         GridPane gridPane = (GridPane) controller.placeholderGridPane.getChildren().get(0);
 
