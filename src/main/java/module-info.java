@@ -7,6 +7,6 @@ module org.example.demo {
 
     opens org.example.demo to javafx.fxml;
     exports org.example.demo;
-    exports org.example.demo.UIController;
-    opens org.example.demo.UIController to javafx.fxml;
+    exports org.example.demo.uicontroller;
+    opens org.example.demo.uicontroller to javafx.fxml;
 }

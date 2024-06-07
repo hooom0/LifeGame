@@ -5,7 +5,7 @@
 <?import javafx.scene.shape.*?>
 <?import javafx.scene.text.*?>
 
-<VBox fx:id="VBox" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onKeyPressed="#ShiftPush" onKeyReleased="#ShiftRelease" prefHeight="950.0" prefWidth="1600.0" xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.demo.UIController.HelloController">
+<VBox fx:id="vBox" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onKeyPressed="#shiftPush" onKeyReleased="#shiftRelease" prefHeight="950.0" prefWidth="1600.0" xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.demo.uicontroller.HelloController">
     <children>
         <GridPane fx:id="placeholderGridPane" prefHeight="900.0" prefWidth="1600.0">
          <rowConstraints>
@@ -16,25 +16,25 @@
          </columnConstraints></GridPane>
       <HBox alignment="CENTER" layoutX="500.0" prefHeight="50.0" prefWidth="200.0" spacing="30.0">
          <children>
-            <Button fx:id="ButtonStart" mnemonicParsing="false" onAction="#StartClick" text="开始">
+            <Button fx:id="buttonStart" mnemonicParsing="false" onAction="#startClick" text="开始">
                <font>
                   <Font size="24.0" />
                </font></Button>
-            <Button fx:id="ButtonStop" mnemonicParsing="false" onAction="#StopClick" text="停止">
+            <Button fx:id="buttonStop" mnemonicParsing="false" onAction="#stopClick" text="停止">
                <font>
                   <Font size="24.0" />
                </font>
             </Button>
-            <Button fx:id="ButtonRefresh" mnemonicParsing="false" onAction="#RefreshClick" text="刷新">
+            <Button fx:id="buttonRefresh" mnemonicParsing="false" onAction="#refreshClick" text="刷新">
                 <font>
                   <Font size="24.0" />
                 </font>
             </Button>
-            <Button fx:id="ButtonClear" mnemonicParsing="false" onAction="#ClearClick" text="清零">
+            <Button fx:id="buttonClear" mnemonicParsing="false" onAction="#clearClick" text="清零">
                <font>
                   <Font size="23.0" />
                </font></Button>
-            <Button fx:id="ButtonRunOnce" mnemonicParsing="false" onAction="#runOnceClick" text="下一步">
+            <Button fx:id="buttonRunOnce" mnemonicParsing="false" onAction="#runOnceClick" text="下一步">
                <font>
                   <Font size="24.0" />
                </font>
@@ -69,7 +69,7 @@
                   <TextField fx:id="highText" />
                </items>
             </SplitPane>
-            <Button fx:id="ButtonChange" mnemonicParsing="false" text="修改大小" onMouseClicked="#ClickChange" />
+            <Button fx:id="ButtonChange" mnemonicParsing="false" text="修改大小" onMouseClicked="#clickChange" />
          </children>
       </HBox>
 
