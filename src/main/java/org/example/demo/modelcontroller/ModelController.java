@@ -1,6 +1,8 @@
 package org.example.demo.modelcontroller;
 
+
 import java.util.Arrays;
+
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.IntStream;
 
@@ -10,9 +12,18 @@ public class ModelController {
     private int lie = 100;
     private int[][] gridData = new int[lie][hang];
     private final int[][] dir = {{0, 1}, {1, 0}, {0, -1}, {-1, 0}, {1, 1}, {-1, -1}, {-1, 1}, {1, -1}};
+    private int[][] gridDataNew = new int[lie][hang];
+    private boolean[][] ifChangeOrNot = new boolean[lie][hang];
 
     public ModelController() {
 
+    }
+
+    public Boolean getChange(int x, int y) {
+        if (x < 0 || y < 0 || x >= lie || y >= hang) {
+            return false;
+        }
+        return ifChangeOrNot[x][y];
     }
 
     public void setHang(int hang) {
@@ -52,29 +63,30 @@ public class ModelController {
         }
     }
 
+    @SuppressWarnings("checkstyle:Regexp")
     public void updateGridData() {
-        int[][] gridDataNew = new int[lie][hang];
+        if (gridDataNew == null || gridDataNew.length != lie || gridDataNew[0].length != hang) {
+            gridDataNew = new int[lie][hang];
+            ifChangeOrNot = new boolean[lie][hang];
+        }
         for (int i = 0; i < lie; i++) {
             for (int j = 0; j < hang; j++) {
-                if (checkLifeGame(i, j)) {
-                    gridDataNew[i][j] = 1;
-                } else {
-                    gridDataNew[i][j] = 0;
-                }
+                gridDataNew[i][j] = checkLifeGame(i, j) ? 1 : 0;
+                ifChangeOrNot[i][j] = gridData[i][j] != gridDataNew[i][j];
             }
         }
+        int[][] temp = gridData;
         gridData = gridDataNew;
+        gridDataNew = temp;
     }
 
     private boolean checkLifeGame(int x, int y) {
         int add = getAdd(x, y);
-        boolean result;
         if (gridData[x][y] == 0) {
-            result = (add == 3);
+            return (add == 3);
         } else {
-            result = add > 1 && add < 4;
+            return add > 1 && add < 4;
         }
-        return result;
     }
 
 
@@ -89,8 +101,36 @@ public class ModelController {
     }
 
     public void allClear() {
-        IntStream.range(0, gridData.length).forEach(i -> {
-            Arrays.fill(gridData[i], 0);
-        });
+        IntStream.range(0, gridData.length).forEach(i -> Arrays.fill(gridData[i], 0));
+    }
+
+    public int getGridData(int i, int j) {
+        return gridData[i][j];
+    }
+}
+
+class Pair<A, B> {
+    private A first;
+    private B second;
+
+    Pair(A first, B second) {
+        this.first = first;
+        this.second = second;
+    }
+
+    public A getFirst() {
+        return first;
+    }
+
+    public void setFirst(A first) {
+        this.first = first;
+    }
+
+    public B getSecond() {
+        return second;
+    }
+
+    public void setSecond(B second) {
+        this.second = second;
     }
 }

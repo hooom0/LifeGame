@@ -6,7 +6,8 @@
 <?import javafx.scene.text.*?>
 
 <VBox fx:id="vBox" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onKeyPressed="#shiftPush" onKeyReleased="#shiftRelease" prefHeight="950.0" prefWidth="1600.0" xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.demo.uicontroller.HelloController">
-    <children>
+
+   <children>
         <GridPane fx:id="placeholderGridPane" prefHeight="900.0" prefWidth="1600.0">
          <rowConstraints>
             <RowConstraints minHeight="0.0" prefHeight="900" />

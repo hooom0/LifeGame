@@ -3,8 +3,8 @@ package org.example.demo.uicontroller;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.collections.ObservableList;
+import javafx.css.PseudoClass;
 import javafx.fxml.FXML;
-import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
@@ -18,11 +18,20 @@ import org.example.demo.modelcontroller.ModelController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+
 import java.util.Objects;
 
 import static java.lang.Integer.parseInt;
 
 public class HelloController {
+
+    private static final PseudoClass ACTIVE_PSEUDO_CLASS = PseudoClass.getPseudoClass("active");
+    private static final PseudoClass INACTIVE_PSEUDO_CLASS = PseudoClass.getPseudoClass("inactive");
+
+    private GridPane childrenGridPane = null;
+    private final String styleBlack = "inactive";
+    private final String styleWhite = "active";
+
     public Circle getIfShiftOrNot() {
         return ifShiftOrNot;
     }
@@ -62,8 +71,9 @@ public class HelloController {
 
     @FXML
     private Button buttonRunOnce;
+    @SuppressWarnings("checkstyle:VisibilityModifier")
     @FXML
-    GridPane placeholderGridPane;
+    private GridPane placeholderGridPane;
 
     public Button getButtonStart() {
         return buttonStart;
@@ -85,12 +95,15 @@ public class HelloController {
     private final ModelController modelcontroller = new ModelController();
 
     Timeline timeline = new Timeline(
-            new KeyFrame(Duration.seconds(0.5), event -> {
+            new KeyFrame(Duration.seconds(1), event -> {
                 // 更新操作
                 modelcontroller.updateGridData();
                 updateGridPane();
-                logger.info("更新一次");
             })
+    );
+
+    Timeline clearNotUse = new Timeline(
+            new KeyFrame(Duration.seconds(40), event -> System.gc())
     );
 
 
@@ -101,6 +114,7 @@ public class HelloController {
 
         widthText.setText(String.valueOf(modelcontroller.getLie()));
         highText.setText(String.valueOf(modelcontroller.getHang()));
+        //clearNotUse.play();
     }
 
     private GridPane initGridPane() {
@@ -116,38 +130,49 @@ public class HelloController {
             rowConstraints.setPercentHeight((double) 100 / modelcontroller.getHang());  // 每行占总高度的 33%
             gridPane.getRowConstraints().add(rowConstraints);
         }
-        int[][] gridData = modelcontroller.getGridData();
         for (int i = 0; i < modelcontroller.getLie(); i++) {
             for (int j = 0; j < modelcontroller.getHang(); j++) {
-                Pane pane = new Pane();
-                pane.setBackground(Background.EMPTY);
-                if (gridData[i][j] == 0) {
-                    pane.setStyle("-fx-background-color: #333333;");
-                } else {
-                    pane.setStyle("-fx-background-color:#CCFFFF ");
-                }
-
-                pane.setOnMouseClicked(mouseEvent -> {
-
-                    findIndexAndChange(mouseEvent, 0);
-                    if (Objects.equals(pane.getStyle(), "-fx-background-color: #333333;")) {
-                        pane.setStyle("-fx-background-color:#CCFFFF ;");
-                    } else {
-                        pane.setStyle("-fx-background-color: #333333;");
-                    }
-                });
-
-                pane.setOnMouseMoved(mouseEvent -> {
-                    if (mouseEvent.isShiftDown()) {
-                        findIndexAndChange(mouseEvent, 1);
-                        pane.setStyle("-fx-background-color:#CCFFFF ;");
-                    }
-                });
+                Pane pane = getPane(i, j);
                 gridPane.add(pane, i, j);
             }
         }
         gridPane.setGridLinesVisible(true);
+        childrenGridPane = gridPane;
         return gridPane;
+    }
+
+
+    private Pane getPane(int i, int j) {
+        Pane pane = new Pane();
+        pane.setBackground(Background.EMPTY);
+        if (modelcontroller.getGridData(i, j) == 0) {
+            pane.getStyleClass().clear();
+           pane.getStyleClass().add(0, styleBlack);
+        } else {
+            pane.getStyleClass().clear();
+            pane.getStyleClass().add(0, styleWhite);
+        }
+
+        pane.setOnMouseClicked(mouseEvent -> {
+
+            findIndexAndChange(mouseEvent, 0);
+            if (Objects.equals(pane.getStyleClass().get(0), styleBlack)) {
+                pane.getStyleClass().clear();
+                pane.getStyleClass().add(0, styleWhite);
+            } else {
+                pane.getStyleClass().clear();
+                pane.getStyleClass().add(0, styleBlack);
+            }
+        });
+
+        pane.setOnMouseMoved(mouseEvent -> {
+            if (mouseEvent.isShiftDown()) {
+                findIndexAndChange(mouseEvent, 1);
+                pane.getStyleClass().clear();
+                pane.getStyleClass().add(0, styleWhite);
+            }
+        });
+        return pane;
     }
 
     private void findIndexAndChange(MouseEvent mouseEvent, int flag) {
@@ -155,31 +180,35 @@ public class HelloController {
         Integer yIndex = (int) ((mouseEvent.getSceneY()) / (placeholderGridPane.getHeight() / modelcontroller.getHang()));
 
         modelcontroller.setGridData(xIndex, yIndex, flag);
-        if (flag == 0) {
-            logger.info("点击X像素位置:" + mouseEvent.getSceneX() + ":" + placeholderGridPane.getWidth());
-            logger.info("点击Y像素位置:" + mouseEvent.getSceneY() + ":" + placeholderGridPane.getHeight());
-            logger.info("点击位置：" + xIndex + "," + yIndex);
-        } else {
-            logger.info("画线位置：" + xIndex + "," + yIndex);
-        }
+        //logger.info(modelcontroller.getGridData()[xIndex][yIndex] + "");
+//        if (flag == 0) {
+//            logger.info("点击X像素位置:" + mouseEvent.getSceneX() + ":" + placeholderGridPane.getWidth());
+//            logger.info("点击Y像素位置:" + mouseEvent.getSceneY() + ":" + placeholderGridPane.getHeight());
+//            logger.info("点击位置：" + xIndex + "," + yIndex);
+//        } else {
+//            logger.info("画线位置：" + xIndex + "," + yIndex);
+//        }
 
     }
 
     public void updateGridPane() {
-        int[][] gridData = modelcontroller.getGridData();
-        GridPane childrens = (GridPane) placeholderGridPane.getChildren().get(0);
-        ObservableList<Node> children = childrens.getChildren();
-        for (Node node : children) {
-            if (node instanceof Group) {
+
+        ObservableList<Node> children = childrenGridPane.getChildren();
+        int i = 0, j = -1;
+
+        for (int index = 0; index < children.size(); index++) {
+            j = index % modelcontroller.getHang();
+            i = index / modelcontroller.getHang();
+            if (!modelcontroller.getChange(i, j)) {
                 continue;
             }
-            int i = GridPane.getColumnIndex(node);
-            int j = GridPane.getRowIndex(node);
-            Pane pane = (Pane) node;
-            if (gridData[i][j] == 0) {
-                pane.setStyle("-fx-background-color: #333333");
-            } else {
-                pane.setStyle("-fx-background-color: #CCFFFF");
+            Node node = children.get(index);
+            if (node instanceof Pane pane) {
+                if (modelcontroller.getGridData(i, j) == 0) {
+                    pane.getStyleClass().set(0, styleBlack);
+                } else {
+                    pane.getStyleClass().set(0, styleWhite);
+                }
             }
         }
     }
@@ -221,7 +250,6 @@ public class HelloController {
     }
 
     public void clearClick() {
-
         logger.info("清零");
         modelcontroller.allClear();
         updateGridPane();
@@ -240,7 +268,7 @@ public class HelloController {
     }
 
     public void clickChange() {
-        logger.info(String.valueOf(parseInt(highText.getText())));
+        //logger.info(String.valueOf(parseInt(highText.getText())));
         modelcontroller.setHang(parseInt(highText.getText()));
         modelcontroller.setLie(parseInt(widthText.getText()));
 
@@ -249,4 +277,7 @@ public class HelloController {
         updateGridPane();
     }
 
+    public GridPane getplaceholderGridPane() {
+        return placeholderGridPane;
+    }
 }
